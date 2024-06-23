@@ -21,6 +21,7 @@ const isPublicRoute = createRouteMatcher([
 	'/snippets/technology/:technology',
 	'/:locale/snippets/:id',
 	'/snippets/:id',
+	'/:locale/snippets/create',
 ]);
 
 export default clerkMiddleware((auth, request) => {
