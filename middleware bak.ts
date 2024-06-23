@@ -1,3 +1,7 @@
+/**
+ * authMiddleware 已弃用
+ */
+
 import { authMiddleware } from '@clerk/nextjs/server';
 
 import createMiddleware from 'next-intl/middleware';
