@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Enviroment Prepare
 
-## Getting Started
+## clerk (Authentication Service)
 
-First, run the development server:
+- [注册 clerk -> Create Application -> Follow by Doc](https://clerk.com/)
+- bun add @clerk/nextjs
+- if you need clerk theme, you can "bun add @clerk/themes"
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## DataBase
+
+- Cloud Database，here I select [supabase](https://supabase.com/)
+
+In this project, I am supposed to use "prisma" to manipulate Database postgres
+
+- bun add prisma -D
+- bun add @prisma/client
+- bunx prisma init
+- configure .env and prisma/schema.prisma
+- bunx prisma migrate dev ==> That will created table in cloud database
+
+## Form
+
+### react-hook-form
+
+```tsx
+import { useForm } from 'react-hook-form';
+export default function App() {
+	const { register, handleSubmit, formState } = useForm({
+		defaultValues: {
+			name: 'xfz',
+			age: 20,
+		},
+	});
+
+	function submit(data) {
+		//
+	}
+
+	// Use register instead of the atttibute "name" of form element
+	return (
+		<form onSubmit={handleSubmit(submit)}>
+			<input
+				{...register('name', {
+					required: 'This field is required',
+					minLength: { value: 3, messsage: 'This is too short' },
+					validate: value => {
+						if (value === 'f*ck') {
+							return 'No bad words please';
+						}
+					},
+				})}
+			/>
+			<span>{formState.errors.name.message}</span>
+			<input
+				type="number"
+				{...register('age', { required: 'This field is required' })}
+			/>
+			<span>{formState.errors.age.message}</span>
+		</form>
+	);
+}
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Code above, it's too troublesome, even code is not enough tidy, it looks like a piece of shit.
+We should make code clean, especially html section tidy to make us realize the structure of html
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### react-hook-form + zod + @hookform/resolvers + @hookform/error-message
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+- Zod can be used for form validating not only in Client but aslo in server.
+- In client, zod need @hookform/resolvers to connext react-hook-form
 
-## Learn More
+```tsx
+import { z } from 'zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-To learn more about Next.js, take a look at the following resources:
+const FormSchema = z.object({
+	name: z
+		.string()
+		.min(3, { message: 'This is too short' })
+		.refine(value => value !== 'f*ck', { message: 'No bad words please' })
+	age: z.number(),
+});
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+export default function App() {
+	const { register, handleSubmit, formState } = useForm({
+		// Here load the schema
+		resolver: zodResolver(FormSchema),
+		defaultValues: {
+			name: 'xfz',
+			age: 20,
+		},
+	});
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+	function submit(data) {
+		//
+	}
 
-## Deploy on Vercel
+	// Use register instead of the atttibute "name" of form element
+	return (
+		<form onSubmit={handleSubmit(submit)}>
+			<input {...register('name')} />
+			<span>{formState.errors.name.message}</span>
+			<input
+				type="number"
+				{...register('age')}
+			/>
+			<span>{formState.errors.age.message}</span>
+		</form>
+	);
+}
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+##
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1.
+2. messages
+
+-
