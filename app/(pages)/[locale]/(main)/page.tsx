@@ -14,7 +14,7 @@ export default async function Home({ params }: { params: { locale: string } }) {
 		<NextIntlClientProvider messages={messages}>
 			<SnippetSearch
 				snippets={data}
-				placeholder={t('searchPlaceholder')}
+				placeholder={t('searchPlaceholder', { technology: '' })}
 			/>
 		</NextIntlClientProvider>
 	);

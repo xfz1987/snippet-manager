@@ -10,7 +10,8 @@
         "title": "Create a snippet"
       }
     },
-    "searchPlaceholder": "Search your snippets",
+    "searchPlaceholder": "Search your {technology} snippets",
+
     "addButton": "+ ADD"
   }
 }

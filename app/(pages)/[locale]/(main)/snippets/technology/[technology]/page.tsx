@@ -19,7 +19,7 @@ export default async function TechnologyPage(p: { params: { technology: Technolo
 			<NextIntlClientProvider messages={messages}>
 				<SnippetSearch
 					snippets={data}
-					placeholder={`Search your ${p.params.technology} snippets`}
+					placeholder={t('searchPlaceholder', { technology: p.params.technology })}
 				/>
 			</NextIntlClientProvider>
 		</div>

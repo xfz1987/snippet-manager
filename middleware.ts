@@ -15,6 +15,12 @@ const isPublicRoute = createRouteMatcher([
 	'/:locale/sign-up(.*)',
 	'/sign-up(.*)',
 	'/api/snippet(.*)',
+	'/',
+	'/:locale',
+	'/:locale/snippets/technology/:technology',
+	'/snippets/technology/:technology',
+	'/:locale/snippets/:id',
+	'/snippets/:id',
 ]);
 
 export default clerkMiddleware((auth, request) => {
@@ -29,5 +35,6 @@ export default clerkMiddleware((auth, request) => {
 
 // 中间件匹配原则，不在这个范围内则不会执行 middleware 逻辑
 export const config = {
-	matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+	// matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+	matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
 };

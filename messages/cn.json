@@ -10,7 +10,7 @@
         "title": "创建变短"
       }
     },
-    "searchPlaceholder": "搜索片段",
+    "searchPlaceholder": "搜索 {technology} 片段",
     "addButton": "+ 创建"
   }
 }

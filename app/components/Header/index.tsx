@@ -1,6 +1,6 @@
 'use client';
 
-import { UserButton } from '@clerk/nextjs';
+import { UserButton, useAuth } from '@clerk/nextjs';
 import Image from 'next/image';
 import Link from 'next/link';
 import logoPng from '/public/logo.png';
@@ -12,6 +12,7 @@ export function Header() {
 	const locale = useLocale();
 	const router = useRouter();
 	const pathname = usePathname();
+	const { userId } = useAuth();
 
 	const toggleLanguage = () => {
 		router.replace(`${locale === 'en' ? '/cn' : '/en'}${pathname.split('/' + locale)[1]}`);
@@ -32,7 +33,7 @@ export function Header() {
 					onClick={toggleLanguage}
 					className="text-white hover:text-white/80 cursor-pointer"
 				/>
-				<UserButton afterSignOutUrl={`/${locale}${process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL}`} />
+				{userId && <UserButton afterSignOutUrl={`/${locale}${process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL}`} />}
 			</div>
 		</header>
 	);

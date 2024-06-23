@@ -78,19 +78,19 @@ export async function deleteSnippet(id: number) {
 const readSnippetSchema = z.number();
 export async function readSnippet(id: number) {
 	const { userId } = auth();
-	if (!userId) {
-		return {
-			success: false,
-			status: 401,
-			message: 'You have not signed in',
-		};
-	}
+	// if (!userId) {
+	// 	return {
+	// 		success: false,
+	// 		status: 401,
+	// 		message: 'You have not signed in',
+	// 	};
+	// }
 
 	try {
 		readSnippetSchema.parse(id);
 
 		const data = await DB.snippet.findUnique({
-			where: { id, userId },
+			where: userId ? { id, userId } : { id },
 		});
 		return { data, success: true };
 	} catch (err) {

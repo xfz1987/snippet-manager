@@ -12,11 +12,13 @@ import { RxCopy } from 'react-icons/rx';
 import { MdEdit, MdDelete } from 'react-icons/md';
 import { deleteSnippet } from '@/app/api/snippet/[id]/service';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
 
 export function SnippetDetail(p: { snippet: Snippet }) {
 	const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 	const dialog = useRef<ReactNode>(null);
 	const router = useRouter();
+	const { userId } = useAuth();
 
 	const snippetMetadata = SNIPPETS_METADATA[p.snippet.technology];
 
@@ -38,20 +40,24 @@ export function SnippetDetail(p: { snippet: Snippet }) {
 
 	const actionButtons = (
 		<div className="flex justify-end space-x-4">
-			<Link
-				href={`/snippets/update/${p.snippet.id}`}
-				className="icon-box flex flex-col"
-			>
-				<MdEdit />
-				Edit
-			</Link>
-			<div
-				className="icon-box flex flex-col"
-				onClick={() => setShowDeleteDialog(true)}
-			>
-				<MdDelete />
-				Delete
-			</div>
+			{userId && (
+				<>
+					<Link
+						href={`/snippets/update/${p.snippet.id}`}
+						className="icon-box flex flex-col"
+					>
+						<MdEdit />
+						Edit
+					</Link>
+					<div
+						className="icon-box flex flex-col"
+						onClick={() => setShowDeleteDialog(true)}
+					>
+						<MdDelete />
+						Delete
+					</div>
+				</>
+			)}
 			<div
 				className="icon-box flex flex-col"
 				onClick={copyCodeIntoClipboard}

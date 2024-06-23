@@ -18,23 +18,25 @@ const readAllSnippetSchema = z
 export async function readAllSnippet(filters?: Partial<Snippet>) {
 	const { userId } = auth();
 
-	if (!userId) {
-		return {
-			data: [],
-			success: false,
-			status: 401,
-			message: 'You have not signed in',
-		};
-	}
+	// if (!userId) {
+	// 	return {
+	// 		data: [],
+	// 		success: false,
+	// 		status: 401,
+	// 		message: 'You have not signed in',
+	// 	};
+	// }
 
 	try {
 		readAllSnippetSchema.parse(filters);
 
 		const data = await DB.snippet.findMany({
-			where: {
-				...filters,
-				userId,
-			},
+			where: userId
+				? {
+						...filters,
+						userId,
+				  }
+				: { ...filters },
 		});
 
 		return { data, success: true };
