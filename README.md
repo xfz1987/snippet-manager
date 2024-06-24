@@ -14,9 +14,9 @@ In this project, I am supposed to use "prisma" to manipulate Database postgres
 
 - bun add prisma -D
 - bun add @prisma/client
-- bunx prisma init
+- bunx prisma generate
 - configure .env and prisma/schema.prisma
-- bunx prisma migrate dev ==> That will created table in cloud database
+- bunx prisma migrate dev --name init ==> That will created table in cloud database
 
 ## Form
 

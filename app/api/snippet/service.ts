@@ -1,5 +1,4 @@
 'use server';
-
 import { auth } from '@clerk/nextjs/server';
 import { Snippet, Language, Technology } from '@prisma/client';
 import { z } from 'zod';

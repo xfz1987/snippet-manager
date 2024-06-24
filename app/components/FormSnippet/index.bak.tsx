@@ -6,9 +6,9 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FieldError } from '@/app/components/FieldError';
-import { ChangeEvent, ClipboardEvent, FocusEventHandler } from 'react';
+import { ClipboardEvent } from 'react';
 import { toast } from 'sonner';
-import { genCode } from '@/app/actions/text-cortext-ai';
+import { genCodeMetadata } from '@/app/actions/text-cortex';
 
 const FormSchema = z.object({
 	title: z.string().min(5, { message: 'This field should be at least 5 characters long' }),
@@ -28,7 +28,7 @@ const DefaultValues = {
 	technology: SNIPPETS_METADATA[SNIPPETS_KEYS[0]].technology,
 };
 
-const MAX_LENGTH_CONTENT = 50;
+const MAX_LENGTH_CONTENT = 1000;
 
 export function FormSnippet(p: { snippet?: Snippet; save: (formData: Form) => Promise<void> }) {
 	const {
@@ -43,23 +43,27 @@ export function FormSnippet(p: { snippet?: Snippet; save: (formData: Form) => Pr
 		defaultValues: p.snippet || DefaultValues,
 	});
 
-	const title = watch('title');
+	const content = watch('content');
 
 	function submit(formData: Form) {
 		p.save(formData);
 	}
 
-	const blurHandler = async (e: ChangeEvent<HTMLInputElement>) => {
-		const text = e.target.value.trim();
-		if (text.length < MAX_LENGTH_CONTENT) {
-			const { data } = await genCode(text);
+	const handleContentPaste = async (e: ClipboardEvent<HTMLTextAreaElement>) => {
+		const pastedText = e.clipboardData.getData('Text');
+		if (pastedText.trim().length < MAX_LENGTH_CONTENT) {
+			const { data } = await genCodeMetadata(pastedText);
+			debugger;
 
 			if (data) {
-				setValue('content', data.content);
+				setValue('title', data.title);
+				if (SNIPPETS_METADATA[data.technology]) {
+					setValue('technology', data.technology);
+				}
 			}
 		} else {
 			e.preventDefault();
-			toast("Can't reach more than " + MAX_LENGTH_CONTENT + " characters ( AI ain't cheap )");
+			toast("Can't paste more than " + MAX_LENGTH_CONTENT + " characters ( AI ain't cheap )");
 		}
 	};
 
@@ -69,7 +73,6 @@ export function FormSnippet(p: { snippet?: Snippet; save: (formData: Form) => Pr
 			<input
 				id="title"
 				{...register('title')}
-				onBlur={blurHandler}
 			/>
 			<FieldError
 				name="title"
@@ -111,6 +114,7 @@ export function FormSnippet(p: { snippet?: Snippet; save: (formData: Form) => Pr
 				{...register('content')}
 				id="content"
 				className="h-96 w-full"
+				onPaste={handleContentPaste}
 				placeholder="Paste your snippet here..."
 			/>
 			<FieldError
@@ -127,9 +131,13 @@ export function FormSnippet(p: { snippet?: Snippet; save: (formData: Form) => Pr
 		>
 			<div className="space-y-6">
 				<h1>New Snippet</h1>
-				{inputTitle}
-				{technoSelect}
-				{title && textareaContent}
+				{textareaContent}
+				{content && (
+					<>
+						{inputTitle}
+						{technoSelect}
+					</>
+				)}
 			</div>
 			<div className="flex justify-end">
 				<button type="submit">Save</button>
