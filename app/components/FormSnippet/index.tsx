@@ -55,7 +55,7 @@ export function FormSnippet(p: { snippet?: Snippet; save: (formData: Form) => Pr
 			const { data } = await genCode(text);
 
 			if (data) {
-				setValue('content', data.content);
+				setValue('content', (data as any).content);
 			}
 		} else {
 			e.preventDefault();

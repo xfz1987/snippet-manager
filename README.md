@@ -14,7 +14,7 @@ In this project, I am supposed to use "prisma" to manipulate Database postgres
 
 - bun add prisma -D
 - bun add @prisma/client
-- bunx prisma generate
+- bunx prisma init
 - configure .env and prisma/schema.prisma
 - bunx prisma migrate dev --name init ==> That will created table in cloud database
 
@@ -32,8 +32,8 @@ export default function App() {
 		},
 	});
 
-	function submit(data) {
-		//
+	function submit(formData) {
+		// ...
 	}
 
 	// Use register instead of the atttibute "name" of form element
@@ -50,6 +50,7 @@ export default function App() {
 					},
 				})}
 			/>
+			{/* 显示校验error */}
 			<span>{formState.errors.name.message}</span>
 			<input
 				type="number"
@@ -110,10 +111,3 @@ export default function App() {
 	);
 }
 ```
-
-##
-
-1.
-2. messages
-
--

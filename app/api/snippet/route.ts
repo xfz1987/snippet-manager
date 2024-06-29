@@ -1,13 +1,13 @@
 import { Snippet } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
-import { readAllSnippet, createSnippet } from './service';
+import { readAllSnippet, createSnippet, ReadAllSnippetParams } from './service';
 import { ApiResponse } from '@/app/types/index';
 import { getQueryParams } from '@/app/lib/util';
 
 export async function GET(req: NextRequest): Promise<NextResponse<ApiResponse<Snippet[]>>> {
 	// { 'title' => '"b"', 'technology' => '"c"' }  需要转化成真正数组 ==> { title: '"b"', technology: '"c"' }
-	const filters: Partial<Snippet> = Object.fromEntries(req.nextUrl.searchParams);
-	// const filters = getQueryParams<typeof readAllSnippetSchema._type>(req);
+	// const filters: Partial<Snippet> = Object.fromEntries(req.nextUrl.searchParams);
+	const filters = getQueryParams<ReadAllSnippetParams>(req);
 
 	return NextResponse.json(await readAllSnippet(filters));
 }

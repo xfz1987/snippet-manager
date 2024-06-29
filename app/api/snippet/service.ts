@@ -14,6 +14,8 @@ const readAllSnippetSchema = z
 	})
 	.optional();
 
+export type ReadAllSnippetParams = typeof readAllSnippetSchema._type;
+
 export async function readAllSnippet(filters?: Partial<Snippet>) {
 	const { userId } = auth();
 

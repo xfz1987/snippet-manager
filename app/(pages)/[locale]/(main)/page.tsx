@@ -1,6 +1,6 @@
 import { readAllSnippet } from '@/app/api/snippet/service';
 import { SnippetSearch } from '@/app/components/SnippetSearch';
-import { NextIntlClientProvider, useTranslations } from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, getTranslations } from 'next-intl/server';
 
 export default async function Home({ params }: { params: { locale: string } }) {
